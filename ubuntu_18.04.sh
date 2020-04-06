@@ -1,5 +1,8 @@
 #!/bin/bash
 
+read -p $'\e[1;44m请输入域名: （例如：www.abc.com，就输入abc.com）\e[0m' domainName
+read -p $'\e[1;44m请输入电子邮箱: \e[0m' emailAddress
+
 sudo apt update
 sudo apt install apache2 -y
 sudo apt install expect -y
@@ -38,8 +41,6 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-sudo apt remove expect -y
-
 sudo apt install php libapache2-mod-php php-mysql -y
 sudo cp /etc/apache2/mods-enabled/dir.conf /etc/apache2/mods-en
 abled/dir.conf.bak
@@ -52,5 +53,37 @@ sudo echo '<IfModule mod_dir.c>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/mods-available/dir.conf
 sudo chmod 644 /etc/apache2/mods-available/dir.conf
 
-sudo add-apt-repository ppa:certbot/certbot
+sudo mkdir /var/www/$domainName
+sudo chown -R $USER:$USER /var/www/$domainName
+sudo chmod -R 755 /var/www/$domainName
+
+
+#sudo echo "<html>
+#    <head>
+#        <title>Welcome to $domainName\!</title>
+#    </head>
+#    <body>
+#        <h1>Success\!  The $domainName server block is working\!</h1>
+#    </body>
+#</html>" > /var/www/$domainName/index.html
+
+
+sudo chmod 777 /etc/apache2/sites-available
+sudo echo "<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    ServerName $domainName
+    ServerAlias www.$domainName
+    DocumentRoot /var/www/$domainName
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>" > /etc/apache2/sites-available/$domainName.conf
+sudo chmod 755 /etc/apache2/sites-available
+
+sudo a2ensite $domainName.conf
+
+
+
+sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt install python-certbot-apache -y
+
+
