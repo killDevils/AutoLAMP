@@ -53,7 +53,12 @@ sudo echo '<IfModule mod_dir.c>
 sudo chmod 644 /etc/apache2/mods-available/dir.conf
 
 export httpRuleName="http-server"
+export httpsRuleName="https-server"
 
 gcloud compute instances add-tags $instanceName \
 --zone $zoneName \
 --tags $httpRuleName
+
+gcloud compute instances add-tags $instanceName \
+--zone $zoneName \
+--tags $httpsRuleName
