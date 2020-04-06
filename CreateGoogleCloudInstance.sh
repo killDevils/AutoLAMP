@@ -103,3 +103,15 @@ gcloud compute instances create $instanceName \
 --machine-type=$instanceType \
 --image-family=$instanceOS \
 --image-project=$OSFamily
+
+
+export httpRuleName="http-server"
+export httpsRuleName="https-server"
+
+gcloud compute instances add-tags $instanceName \
+--zone $zoneName \
+--tags $httpRuleName
+
+gcloud compute instances add-tags $instanceName \
+--zone $zoneName \
+--tags $httpsRuleName
