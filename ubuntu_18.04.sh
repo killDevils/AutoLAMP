@@ -39,3 +39,17 @@ expect eof
 echo "$SECURE_MYSQL"
 
 sudo apt remove expect -y
+
+sudo apt install php libapache2-mod-php php-mysql -y
+sudo nano /etc/apache2/mods-enabled/dir.conf
+sudo cp /etc/apache2/mods-enabled/dir.conf /etc/apache2/mods-en
+abled/dir.conf.bak
+
+sudo chmod 777 /etc/apache2/mods-available/dir.conf
+sudo echo '<IfModule mod_dir.c>
+    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/mods-available/dir.conf
+sudo chmod 644 /etc/apache2/mods-available/dir.conf
+
