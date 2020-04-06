@@ -41,7 +41,6 @@ echo "$SECURE_MYSQL"
 sudo apt remove expect -y
 
 sudo apt install php libapache2-mod-php php-mysql -y
-sudo nano /etc/apache2/mods-enabled/dir.conf
 sudo cp /etc/apache2/mods-enabled/dir.conf /etc/apache2/mods-en
 abled/dir.conf.bak
 
