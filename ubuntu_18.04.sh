@@ -1,7 +1,7 @@
 #!/bin/bash
 
-read -p $'\e[1;44m请输入域名: （例如：www.abc.com，就输入abc.com）\e[0m' domainName
-read -p $'\e[1;44m请输入电子邮箱: \e[0m' emailAddress
+read -p $'\e[1;44m Type in your domain name: （e.g. www.abc.com, then type in abc.com）\e[0m' domainName
+read -p $'\e[1;43m Type in your email address: \e[0m' emailAddress
 
 sudo apt update
 sudo apt install apache2 -y
