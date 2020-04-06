@@ -1,8 +1,6 @@
 #launch instances
-curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/ubuntu_18.04.sh
-bash ubuntu_18.04.sh
-
-
+curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/CreateGoogleCloudInstance.sh
+bash CreateGoogleCloudInstance.sh
 
 
 #auto deploy LAMP
