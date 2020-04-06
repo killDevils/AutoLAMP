@@ -85,7 +85,7 @@ sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt install python-certbot-apache -y
 
 START_CERBOT=$(expect -c "
-set timeout 2
+set timeout 20
 spawn sudo certbot --apache -d $domainName -d www.$domainName
 expect \"Enter email address (used for urgent renewal and security notices) (Enter 'c' to
 cancel):\"
