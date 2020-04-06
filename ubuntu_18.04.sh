@@ -52,13 +52,5 @@ sudo echo '<IfModule mod_dir.c>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/mods-available/dir.conf
 sudo chmod 644 /etc/apache2/mods-available/dir.conf
 
-export httpRuleName="http-server"
-export httpsRuleName="https-server"
-
-gcloud compute instances add-tags $instanceName \
---zone $zoneName \
---tags $httpRuleName
-
-gcloud compute instances add-tags $instanceName \
---zone $zoneName \
---tags $httpsRuleName
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt install python-certbot-apache -y
