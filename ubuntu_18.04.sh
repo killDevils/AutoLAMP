@@ -81,9 +81,22 @@ sudo chmod 755 /etc/apache2/sites-available
 
 sudo a2ensite $domainName.conf
 
-
-
 sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt install python-certbot-apache -y
 
+START_CERBOT=$(expect -c "
+set timeout 2
+spawn sudo certbot --apache -d $domainName -d www.$domainName
+expect \"Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel):\"
+send \"$emailAddress\r\"
+expect \"(A)gree/(C)ancel:\"
+send \"a\r\" 
+expect \"(Y)es/(N)o:\"
+send \"y\r\"
+expect \"Select the appropriate number [1-2] then [enter] (press 'c' to cancel):\"
+send \"2\r\"
+expect eof
+")
 
+echo "$START_CERBOT"
