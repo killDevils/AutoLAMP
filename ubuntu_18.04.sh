@@ -94,7 +94,7 @@ expect \"(A)gree/(C)ancel:\"
 send \"a\r\" 
 expect \"(Y)es/(N)o:\"
 send \"y\r\"
-expect \"Select the appropriate number [1-2] then [enter] (press 'c' to cancel):\"
+expect \"Select the appropriate number \[1-2\] then \[enter\] (press 'c' to cancel):\"
 send \"2\r\"
 expect eof
 ")
