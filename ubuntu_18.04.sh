@@ -41,7 +41,21 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-sudo apt install php libapache2-mod-php php-mysql -y
+php_config_file_path="/etc/php/7.2/apache2/php.ini"
+
+sudo apt install php7.2 libapache2-mod-php7.2 php7.2-common php7.2-mysql php7.2-gmp php7.2-curl php7.2-intl php7.2-mbstring php7.2-xmlrpc php7.2-gd php7.2-bcmath php7.2-soap php7.2-ldap php7.2-imap php7.2-xml php7.2-cli php7.2-zip -y
+
+sed -i "s/file_uploads =.*/file_uploads = On/" $php_config_file_path
+sed -i "s/allow_url_fopen =.*/allow_url_fopen = On/" $php_config_file_path
+sed -i "s/short_open_tag =.*/short_open_tag = On/" $php_config_file_path
+sed -i "s/memory_limit =.*/memory_limit = 256M/" $php_config_file_path
+sed -i "s/upload_max_filesize =.*/upload_max_filesize = 100M/" $php_config_file_path
+sed -i "s/max_execution_time =.*/max_execution_time = 360/" $php_config_file_path
+sed -i "s/date.timezone =.*/date.timezone = Hong Kong/" $php_config_file_path
+
+sudo systemctl restart apache2.service
+
+
 sudo cp /etc/apache2/mods-enabled/dir.conf /etc/apache2/mods-en
 abled/dir.conf.bak
 
@@ -57,15 +71,6 @@ sudo mkdir /var/www/$domainName
 sudo chown -R $USER:$USER /var/www/$domainName
 sudo chmod -R 755 /var/www/$domainName
 
-
-#sudo echo "<html>
-#    <head>
-#        <title>Welcome to $domainName\!</title>
-#    </head>
-#    <body>
-#        <h1>Success\!  The $domainName server block is working\!</h1>
-#    </body>
-#</html>" > /var/www/$domainName/index.html
 
 
 sudo chmod 777 /etc/apache2/sites-available
