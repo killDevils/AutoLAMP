@@ -41,11 +41,12 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
+php_config_file_folder="/etc/php/7.2/apache2"
 php_config_file_path="/etc/php/7.2/apache2/php.ini"
 
 sudo apt install php7.2 libapache2-mod-php7.2 php7.2-common php7.2-mysql php7.2-gmp php7.2-curl php7.2-intl php7.2-mbstring php7.2-xmlrpc php7.2-gd php7.2-bcmath php7.2-soap php7.2-ldap php7.2-imap php7.2-xml php7.2-cli php7.2-zip -y
 
-sudo chmod 777 $php_config_file_path
+sudo chmod -R 777 $php_config_file_folder
 sed -i "s/file_uploads =.*/file_uploads = On/" $php_config_file_path
 sed -i "s/allow_url_fopen =.*/allow_url_fopen = On/" $php_config_file_path
 sed -i "s/short_open_tag =.*/short_open_tag = On/" $php_config_file_path
@@ -53,7 +54,7 @@ sed -i "s/memory_limit =.*/memory_limit = 256M/" $php_config_file_path
 sed -i "s/upload_max_filesize =.*/upload_max_filesize = 100M/" $php_config_file_path
 sed -i "s/max_execution_time =.*/max_execution_time = 360/" $php_config_file_path
 sed -i "s/date.timezone =.*/date.timezone = Hong Kong/" $php_config_file_path
-sudo chmod -R 755 $php_config_file_path
+sudo chmod -R 755 $php_config_file_folder
 
 sudo systemctl restart apache2.service
 
