@@ -21,10 +21,10 @@ echo
 
 echo -e "\e[1;42m Listing country or region...\e[0m"
 export PS3=$'\e[1;42m Which country or region do you wanna select? Enter the number and press return:  \e[0m'
-select regionName in "Hong Kong" "Taiwan" "Tokyo" "Osaka" "Mumbai" "Singapore" "Sydney" "Montreal" "Sao Paulo" "Iowa" "South Carolina" "North Virginia" "Oregon" "Los Angeles" "Finland" "Belgium" "London" "Frankfurt" "Netherlands" "Zurich"
+select regionName in "Hong_Kong" "Taiwan" "Tokyo" "Osaka" "Mumbai" "Singapore" "Sydney" "Montreal" "Sao_Paulo" "Iowa" "South_Carolina" "North_Virginia" "Oregon" "Los_Angeles" "Finland" "Belgium" "London" "Frankfurt" "Netherlands" "Zurich"
 do
 	case $regionName in
-		Hong Kong) regionCode="asia-east2";;
+		Hong_Kong) regionCode="asia-east2";;
 		Taiwan) regionCode="asia-east1";;
 		Tokyo) regionCode="asia-northeast1";;
 		Osaka) regionCode="asia-northeast2";;
@@ -32,12 +32,12 @@ do
 		Singapore) regionCode="asia-southeast1";;
 		Sydney) regionCode="australia-southeast1";;
 		Montreal) regionCode="northamerica-northeast1";;
-		Sao Paulo) regionCode="southamerica-east1";;
+		Sao_Paulo) regionCode="southamerica-east1";;
 		Iowa) regionCode="us-central1";;
-		South Carolina) regionCode="us-east1";;
-		North Virginia) regionCode="us-east4";;
+		South_Carolina) regionCode="us-east1";;
+		North_Virginia) regionCode="us-east4";;
 		Oregon) regionCode="us-west1";;
-		Los Angeles) regionCode="us-west2";;
+		Los_Angeles) regionCode="us-west2";;
 		Finland) regionCode="europe-north1";;
 		Belgium) regionCode="europe-west1";;
 		London) regionCode="europe-west2";;
