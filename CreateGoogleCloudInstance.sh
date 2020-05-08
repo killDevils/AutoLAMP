@@ -70,6 +70,27 @@ echo
 echo
 echo
 
+
+echo -e "\e[1;42m Listing Instance Type...\e[0m"
+export PS3=$'\e[1;42m Which Instance Type do you wanna select? Enter the number and press return:  \e[0m'
+select type in "f1-micro_1vCPU_0.6GB" "g1-small_1vCPU_1.7GB" "n1-standard-1_1vCPU_3.75GB"
+do
+	case $type in
+		f1-micro_1vCPU_0.6GB) machineType="f1-micro";;
+		g1-small_1vCPU_1.7GB) machineType="g1-small";;
+		n1-standard-1_1vCPU_3.75GB) machineType="n1-standard-1";;
+		
+	esac
+	break
+done
+echo
+echo -e "\e[1;32m The Instance Type you chose is \e[0m\e[1;42m $machineType \e[0m"
+echo
+echo
+echo
+ 
+
+
 echo -e "\e[1;44m Listing running instances in this project...\e[0m"
 gcloud compute instances list | awk '!/NAME/ && /RUNNING/ { print $1 "\t" $2 "\t" $7}'|sort -k1 -rn
 echo
@@ -92,7 +113,7 @@ do
 done
 
 
-export instanceType="f1-micro"
+export instanceType=$machineType
 export instanceOS="ubuntu-1804-lts"
 export OSFamily="gce-uefi-images"
 export tempConfigFile="tempConfigFile"
