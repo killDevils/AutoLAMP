@@ -1,6 +1,26 @@
 #!/bin/bash
 
-read -p $'\e[1;44m Type in your domain name: （e.g. www.abc.com, then type in abc.com）\e[0m' domainName
+export PS3=$'\e[1;43m Are you gonna use a domain (like "www.abc.com" and "abc.com")? Or a subdomain (like sub.abc.com)? 请输入数字并回车： \e[0m'
+select domainOrSubdomain in $'\e[1;32m Domain \e[0m' $'\e[1;31m Subdomain \e[0m'
+do
+	case $domainOrSubdomain in
+		$'\e[1;32m Domain \e[0m') nameType="domain";;
+    $'\e[1;31m Subdomain \e[0m') nameType="subdomain";;
+	esac
+	break
+done
+
+if [ $nameType == "domain" ]
+then
+  read -p $'\e[1;44m Type in your domain name: (e.g. abc.com) \e[0m' domainName
+  read -p $'\e[1;44m Type in your alias: (e.g. www.abc.com) \e[0m' domainNameAlias
+  wwwFolder=$domainName
+elif [ $nameType == "subdomain" ]
+then
+  read -p $'\e[1;44m Type in your subdomain name: (e.g. sub.abc.com) \e[0m' subdomainName
+  wwwFolder=$subdomainName
+fi
+
 read -p $'\e[1;43m Type in your email address: \e[0m' emailAddress
 
 sudo apt update
@@ -70,29 +90,53 @@ sudo echo '<IfModule mod_dir.c>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/mods-available/dir.conf
 sudo chmod 644 /etc/apache2/mods-available/dir.conf
 
-sudo mkdir /var/www/$domainName
-sudo chown -R $USER:$USER /var/www/$domainName
-sudo chmod -R 755 /var/www/$domainName
+sudo mkdir /var/www/$wwwFolder
+sudo chown -R $USER:$USER /var/www/$wwwFolder
+sudo chmod -R 755 /var/www/$wwwFolder
 
 
 
 sudo chmod 777 /etc/apache2/sites-available
-sudo echo "<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    ServerName $domainName
-    ServerAlias www.$domainName
-    DocumentRoot /var/www/$domainName
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>" > /etc/apache2/sites-available/$domainName.conf
+
+if [ $nameType == "domain" ]
+then
+  sudo echo "<VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      ServerName $domainName
+      ServerAlias $domainNameAlias
+      DocumentRoot /var/www/$wwwFolder
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+  </VirtualHost>" > /etc/apache2/sites-available/$wwwFolder.conf
+elif [ $nameType == "subdomain" ]
+then
+  sudo echo "<VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      ServerName $subdomainName
+      DocumentRoot /var/www/$wwwFolder
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+  </VirtualHost>" > /etc/apache2/sites-available/$wwwFolder.conf
+fi
+  
 sudo chmod 755 /etc/apache2/sites-available
 
-sudo a2ensite $domainName.conf
+sudo a2ensite $wwwFolder.conf
+
+FILE=/etc/apache2/sites-available/000-default.conf
+if test -f "$FILE"; then
+    confFile="000-default.conf"
+    sudo a2dissite $confFile
+fi
+
 
 sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt install python-certbot-apache -y
 
-START_CERBOT=$(expect -c "
+
+if [ $nameType == "domain" ]
+then
+  START_CERBOT=$(expect -c "
 set timeout 20
 spawn sudo certbot --apache -d $domainName -d www.$domainName
 expect \"Enter email address (used for urgent renewal and security notices) (Enter 'c' to
@@ -106,5 +150,22 @@ expect \"Select the appropriate number \[1-2\] then \[enter\] (press 'c' to canc
 send \"2\r\"
 expect eof
 ")
+elif [ $nameType == "subdomain" ]
+then
+  START_CERBOT=$(expect -c "
+set timeout 20
+spawn sudo certbot --apache -d $subdomainName
+expect \"Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel):\"
+send \"$emailAddress\r\"
+expect \"(A)gree/(C)ancel:\"
+send \"a\r\" 
+expect \"(Y)es/(N)o:\"
+send \"y\r\"
+expect \"Select the appropriate number \[1-2\] then \[enter\] (press 'c' to cancel):\"
+send \"2\r\"
+expect eof
+")
+fi
 
 echo "$START_CERBOT"
