@@ -169,3 +169,5 @@ expect eof
 fi
 
 echo "$START_CERBOT"
+
+sudo certbot renew --dry-run
