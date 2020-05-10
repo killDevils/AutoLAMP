@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PS3=$'\e[1;43m Are you gonna use a domain (like "www.abc.com" and "abc.com")? Or a subdomain (like sub.abc.com)? 请输入数字并回车： \e[0m'
+export PS3=$'\e[1;43m Are you gonna use a domain (like "www.abc.com" and "abc.com")? Or a subdomain (like sub.abc.com)?  \e[0m'
 select domainOrSubdomain in $'\e[1;32m Domain \e[0m' $'\e[1;31m Subdomain \e[0m'
 do
 	case $domainOrSubdomain in
