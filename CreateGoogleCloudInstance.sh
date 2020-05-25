@@ -79,7 +79,7 @@ do
 		f1-micro_1vCPU_0.6GB) machineType="f1-micro";;
 		g1-small_1vCPU_1.7GB) machineType="g1-small";;
 		n1-standard-1_1vCPU_3.75GB) machineType="n1-standard-1";;
-		
+
 	esac
 	break
 done
@@ -88,7 +88,7 @@ echo -e "\e[1;32m The Instance Type you chose is \e[0m\e[1;42m $machineType \e[0
 echo
 echo
 echo
- 
+
 
 
 echo -e "\e[1;44m Listing running instances in this project...\e[0m"
@@ -125,13 +125,62 @@ gcloud compute instances create $instanceName \
 --image-project=$OSFamily
 
 
-export httpRuleName="http-server"
-export httpsRuleName="https-server"
+
+
+httpRuleTag="http-server"
+httpRuleName="default-allow-http"
+httpsRuleTag="https-server"
+httpsRuleName="default-allow-https"
+
+gcloud compute firewall-rules list > firewallRulesTempList
+httpExistOrNot=$(cat firewallRulesTempList | grep tcp:80 | grep http)
+httpsExistOrNot=$(cat firewallRulesTempList | grep tcp:443 | grep https)
+if [ -z "$httpExistOrNot" ]; then
+	gcloud compute firewall-rules create $httpRuleName \
+	--action allow \
+	--direction ingress \
+	--rules tcp:80 \
+	--source-ranges 0.0.0.0/0 \
+	--priority 1000 \
+	--target-tags $httpRuleTag
+fi
+if [ -z "$httpsExistOrNot" ]; then
+	gcloud compute firewall-rules create $httpsRuleName \
+	--action allow \
+	--direction ingress \
+	--rules tcp:443 \
+	--source-ranges 0.0.0.0/0 \
+	--priority 1000 \
+	--target-tags $httpsRuleTag
+fi
 
 gcloud compute instances add-tags $instanceName \
 --zone $zoneName \
---tags $httpRuleName
+--tags $httpRuleTag
 
 gcloud compute instances add-tags $instanceName \
 --zone $zoneName \
---tags $httpsRuleName
+--tags $httpsRuleTag
+
+rm -f firewallRulesTempList
+
+
+
+######### DEBUG
+
+# ufwDelete(){
+# 	gcloud compute firewall-rules delete $1
+# }
+#
+#
+# if [ -z "$httpExistOrNot" ]; then
+# 	echo "http Not Exist"
+# else
+# 	echo "http is here!"
+# fi
+#
+# if [ -z "$httpsExistOrNot" ]; then
+# 	echo "https Not Exist"
+# else
+# 	echo "https is here!"
+# fi
