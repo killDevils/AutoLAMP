@@ -31,4 +31,6 @@ It will also:
 1. build a virtual host for your domain
 1. secure Apache with Cerbot
 
-###Hope you like it!
+## How to use?
+
+## Hope you like it!
