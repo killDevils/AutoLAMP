@@ -165,20 +165,21 @@ while [ $? -ne 0 ]; do
 	sleep 5
 done
 
+rm -- "$0"
 
 ######### DEBUG
 
-projectName=testmybrain
-zoneName=asia-east2-b
-instanceName=testweb03
-gcloud compute ssh --project $projectName --zone $zoneName $instanceName
-echo $?
-
-while [ $? -ne 0 ]; do
-	gcloud compute ssh --project $projectName --zone $zoneName $instanceName
-	sleep 5
-done
-
+# projectName=testmybrain
+# zoneName=asia-east2-b
+# instanceName=testweb03
+# gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+# echo $?
+#
+# while [ $? -ne 0 ]; do
+# 	gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+# 	sleep 5
+# done
+#
 
 
 # ufwDelete(){
