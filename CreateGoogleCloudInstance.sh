@@ -184,3 +184,9 @@ rm -f firewallRulesTempList
 # else
 # 	echo "https is here!"
 # fi
+
+newFunc(){
+	tyughj="123tyughj"
+}
+newFunc
+echo $tyughj
