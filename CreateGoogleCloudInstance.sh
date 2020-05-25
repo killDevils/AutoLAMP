@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source <(curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
+source <(curl -s https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
 
 gcloud config set project defaultdefault
 

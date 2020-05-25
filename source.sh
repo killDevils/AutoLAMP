@@ -1,5 +1,5 @@
 # paste the line below to source online
-# source <(curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
+# source <(curl -s https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
 
 
 
