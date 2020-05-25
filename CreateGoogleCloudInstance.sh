@@ -156,13 +156,30 @@ gcloud compute instances remove-metadata --project $projectName --zone $zoneName
 rm -f startup-script.sh
 rm -f firewallRulesTempList
 
-cecho $yello "Instance is up, entering it..."
-cecho $purple "run \"bash $insSetupFilePath\" in the instance"
-
+cecho $yellow "Instance is up, entering it..."
+cecho $purple "Please run \"bash $insSetupFilePath\" in the instance"
 
 gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+while [ $? -ne 0 ]; do
+	gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+	sleep 5
+done
+
 
 ######### DEBUG
+
+projectName=testmybrain
+zoneName=asia-east2-b
+instanceName=testweb03
+gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+echo $?
+
+while [ $? -ne 0 ]; do
+	gcloud compute ssh --project $projectName --zone $zoneName $instanceName
+	sleep 5
+done
+
+
 
 # ufwDelete(){
 # 	gcloud compute firewall-rules delete $1
