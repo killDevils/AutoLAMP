@@ -1,5 +1,21 @@
 #!/bin/bash
 
+source <(curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
+
+
+extIP=$(curl icanhazip.com 2> /dev/null)
+
+export PS3=$(cecho $whiteRed "Have you added an A Record that points to $extIP in your domain control panel?")
+select yesOrNo in $'\e[1;32m Yes \e[0m' $'\e[1;31m No \e[0m'
+do
+	case $yesOrNo in
+		$'\e[1;32m Yes \e[0m') ;;
+    		$'\e[1;31m No \e[0m') echo "Do it, and come back again!";exit 0;;
+	esac
+	break
+done
+
+
 export PS3=$'\e[1;43m Are you gonna use a domain (like "www.abc.com" and "abc.com")? Or a subdomain (like sub.abc.com)?  \e[0m'
 select domainOrSubdomain in $'\e[1;32m Domain \e[0m' $'\e[1;31m Subdomain \e[0m'
 do
@@ -47,7 +63,7 @@ spawn sudo mysql_secure_installation
 expect \"Enter current password for root (enter for none):\"
 send \"\r\"
 expect \"Set root password?\"
-send \"n\r\" 
+send \"n\r\"
 expect \"Remove anonymous users?\"
 send \"y\r\"
 expect \"Disallow root login remotely?\"
@@ -118,7 +134,7 @@ then
       CustomLog ${APACHE_LOG_DIR}/access.log combined
   </VirtualHost>" > /etc/apache2/sites-available/$wwwFolder.conf
 fi
-  
+
 sudo chmod 755 /etc/apache2/sites-available
 
 sudo a2ensite $wwwFolder.conf
@@ -143,7 +159,7 @@ expect \"Enter email address (used for urgent renewal and security notices) (Ent
 cancel):\"
 send \"$emailAddress\r\"
 expect \"(A)gree/(C)ancel:\"
-send \"a\r\" 
+send \"a\r\"
 expect \"(Y)es/(N)o:\"
 send \"y\r\"
 expect \"Select the appropriate number \[1-2\] then \[enter\] (press 'c' to cancel):\"
@@ -159,7 +175,7 @@ expect \"Enter email address (used for urgent renewal and security notices) (Ent
 cancel):\"
 send \"$emailAddress\r\"
 expect \"(A)gree/(C)ancel:\"
-send \"a\r\" 
+send \"a\r\"
 expect \"(Y)es/(N)o:\"
 send \"y\r\"
 expect \"Select the appropriate number \[1-2\] then \[enter\] (press 'c' to cancel):\"

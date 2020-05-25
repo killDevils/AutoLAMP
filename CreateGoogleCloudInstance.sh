@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source <(curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/source.sh)
+
 gcloud config set project defaultdefault
 
 echo -e "\e[1;41m Listing projects...\e[0m"
@@ -118,41 +120,28 @@ export instanceOS="ubuntu-1804-lts"
 export OSFamily="gce-uefi-images"
 export tempConfigFile="tempConfigFile"
 
+insSetupFilePath="/home/naidaomeihui/setup.sh"
+
+echo '#!/bin/bash' > startup-script.sh
+echo "
+insSetupFile=\"ubuntu_18.04.sh\"
+curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/$insSetupFile
+mv $insSetupFile $insSetupFilePath
+sudo chmod a+x $insSetupFilePath
+" >> startup-script.sh
+
+
+
 gcloud compute instances create $instanceName \
 --zone=$zoneName \
 --machine-type=$instanceType \
 --image-family=$instanceOS \
---image-project=$OSFamily
+--image-project=$OSFamily \
+--metadata-from-file startup-script=startup-script.sh
 
 
 
-
-httpRuleTag="http-server"
-httpRuleName="default-allow-http"
-httpsRuleTag="https-server"
-httpsRuleName="default-allow-https"
-
-gcloud compute firewall-rules list > firewallRulesTempList
-httpExistOrNot=$(cat firewallRulesTempList | grep tcp:80 | grep http)
-httpsExistOrNot=$(cat firewallRulesTempList | grep tcp:443 | grep https)
-if [ -z "$httpExistOrNot" ]; then
-	gcloud compute firewall-rules create $httpRuleName \
-	--action allow \
-	--direction ingress \
-	--rules tcp:80 \
-	--source-ranges 0.0.0.0/0 \
-	--priority 1000 \
-	--target-tags $httpRuleTag
-fi
-if [ -z "$httpsExistOrNot" ]; then
-	gcloud compute firewall-rules create $httpsRuleName \
-	--action allow \
-	--direction ingress \
-	--rules tcp:443 \
-	--source-ranges 0.0.0.0/0 \
-	--priority 1000 \
-	--target-tags $httpsRuleTag
-fi
+judgeHttpAndHttps
 
 gcloud compute instances add-tags $instanceName \
 --zone $zoneName \
@@ -162,7 +151,14 @@ gcloud compute instances add-tags $instanceName \
 --zone $zoneName \
 --tags $httpsRuleTag
 
+gcloud compute instances remove-metadata --project $projectName --zone $zoneName $instanceName \
+      --all
+rm -f startup-script.sh
 rm -f firewallRulesTempList
+
+cecho $yello "Instance is up, entering it..."
+cecho $purple "run \"bash $insSetupFilePath\" in the instance"
+
 
 gcloud compute ssh --project $projectName --zone $zoneName $instanceName
 
