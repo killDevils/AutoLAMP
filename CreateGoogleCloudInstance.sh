@@ -164,7 +164,7 @@ gcloud compute instances add-tags $instanceName \
 
 rm -f firewallRulesTempList
 
-
+gcloud compute ssh --project $projectName --zone $zoneName $instanceName
 
 ######### DEBUG
 
