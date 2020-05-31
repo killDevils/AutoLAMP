@@ -124,7 +124,7 @@ insSetupFilePath="/home/naidaomeihui/setup.sh"
 
 echo '#!/bin/bash' > startup-script.sh
 echo "
-insSetupFile=\"ubuntu_18.04.sh\"
+insSetupFile='ubuntu_18.04.sh'
 curl -s -O https://raw.githubusercontent.com/killDevils/AutoLAMP/master/$insSetupFile
 mv $insSetupFile $insSetupFilePath
 sudo chmod a+x $insSetupFilePath
